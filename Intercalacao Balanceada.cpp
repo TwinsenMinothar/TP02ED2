@@ -48,19 +48,31 @@ int ordenarMemoriaPrincipal();
 
 void imprimeMemoriaPrincipal();
 
-int salvaNaFita();
+int salvaNaFita(int indice);
+
+int passaFitaSaida();
 
 FILE **fitas = new FILE *[F];
+
+typedef struct f {
+    FILE *fita;
+    int cont;
+} Fita;
+
 FILE *arq;
 Aluno *memPrincipal = new Aluno[19];
 
 int main() {
+    int indice = 1;
     arq = fopen("PROVAO.TXT", "r");
     iniciaFitas();
-    preencheMemoriaPrincipal();
-    ordenarMemoriaPrincipal();
-    salvaNaFita();
-
+    while (preencheMemoriaPrincipal()) {
+        ordenarMemoriaPrincipal();
+        salvaNaFita(indice++);
+        if (indice == 20)
+            indice = 1;
+    }
+    fclose(arq);
     return 0;
 }
 
@@ -73,12 +85,16 @@ int iniciaFitas() {
 }
 
 int preencheMemoriaPrincipal() {
-    for (int i = 0; i < F-1; i++) {
+    for (int i = 0; i < F - 1; i++) {
+        if (feof(arq)) {
+            cout << "EOF" << endl;
+            return 0;
+        }
         fscanf(arq, "%s %s %s %51c %30c", memPrincipal[i].inscricao, memPrincipal[i].nota, memPrincipal[i].estado,
                memPrincipal[i].cidade, memPrincipal[i].curso);
         memPrincipal[i].notaf = atof(memPrincipal[i].nota);
     }
-    return 0;
+    return 1;
 }
 
 bool compare(Aluno const &a, Aluno const &b) {
@@ -86,23 +102,30 @@ bool compare(Aluno const &a, Aluno const &b) {
 }
 
 int ordenarMemoriaPrincipal() {
-    std::sort(memPrincipal,memPrincipal + 19,compare);
+    std::sort(memPrincipal, memPrincipal + 19, compare);
     return 0;
 }
 
-void imprimeMemoriaPrincipal(){
-    for(int i = 0; i < F-1;i++){
+void imprimeMemoriaPrincipal() {
+    for (int i = 0; i < F - 1; i++) {
         cout << memPrincipal[i].notaf << " ";
     }
 }
 
-int salvaNaFita(){
+int salvaNaFita(int indice) {
     FILE *fita;
     char nome[15];
-    for(int i = 0;i<F-1;i++) {
-        sprintf(nome, "fita%d.txt", i+1);
-        fita = fopen(nome, "a");
-        fprintf(fita,"%s %s %s %.50s %.30s\n", memPrincipal[i].inscricao, memPrincipal[i].nota, memPrincipal[i].estado,
+    sprintf(nome, "fita%d.txt", indice);
+    fita = fopen(nome, "a");
+    for (int i = 0; i < F - 1; i++) {
+        fprintf(fita, "%s %s %s %.50s %.30s", memPrincipal[i].inscricao, memPrincipal[i].nota, memPrincipal[i].estado,
                 memPrincipal[i].cidade, memPrincipal[i].curso);
     }
+    fputc('\n', fita);
+    fclose(fita);
+    return 0;
+}
+
+int passaFitaSaida() {
+
 }
