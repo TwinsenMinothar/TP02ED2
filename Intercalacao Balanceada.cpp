@@ -52,7 +52,7 @@ int salvaNaFita(int indice);
 
 int passaFitaSaida();
 
-FILE **fitas = new FILE *[F];
+FILE **fitas = new FILE *[F - 1];
 
 typedef struct f {
     FILE *fita;
@@ -127,5 +127,19 @@ int salvaNaFita(int indice) {
 }
 
 int passaFitaSaida() {
+    // Ler o primeiro registro de cada fita retira o registor com a menor chave e o armazena na fita de saida
+    // Acho que vou ordenar a primeira linha de cada fita na primeira linha da fita de saida e assim por diante
+    for (int i = 0; i < F - 1; i++) {
+        char nome[15];
+        sprintf(nome, "fita%d.txt", i+1);
+        fitas[i] = fopen(nome,"r");
+        fscanf(fitas[i], "%s %s %s %51c %30c", memPrincipal[i].inscricao, memPrincipal[i].nota, memPrincipal[i].estado,
+               memPrincipal[i].cidade, memPrincipal[i].curso);
+        memPrincipal[i].notaf = atof(memPrincipal[i].nota);
+    }
+    ordenarMemoriaPrincipal();
+    //fitas[19] = fopen("fita20.txt","a");
+    salvaNaFita(20);
+
 
 }
