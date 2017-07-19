@@ -1,29 +1,17 @@
 #include<limits.h>
 #include <stdio.h>
 #include<stdlib.h>
+#include "Aluno.h"
 
 #define MAXTAM 20
 
-
-typedef float TipoChave;
-typedef struct TipoItem {
-  TipoChave Chave;
-  TipoChave Indice;
-  long int  Inscricao;
-  char Estado [3];
-  char Cidade [51];
-  char Curso [31];
-} TipoItem;
-typedef int TipoIndice;
-typedef TipoItem TipoVetor[MAXTAM + 1];
-
-void Refaz(TipoIndice Esq, TipoIndice Dir, TipoItem *A);
-void RefazPeloIndice(TipoIndice Esq, TipoIndice Dir, TipoItem *A);
-void Constroi(TipoItem *A, TipoIndice *n);
-void ConstroiPeloIndice(TipoItem *A, TipoIndice *n);
-TipoItem Min(TipoItem *A);
-TipoItem RetiraMin(TipoItem *A, TipoIndice *n);
-void AumentaChave(TipoIndice i, TipoChave ChaveNova, TipoItem *A);
-void Insere(TipoItem *x, TipoItem *A, TipoIndice *n);
-void Imprime(TipoItem *V, TipoIndice *n);
+void Refaz(int Esq, int Dir, Aluno *A);
+void RefazPeloIndice(int Esq, int Dir, Aluno *A);
+void Constroi(Aluno *A, int  *n);
+void ConstroiPeloIndice(Aluno *A, int *n);
+Aluno Min(Aluno *A);
+Aluno RetiraMin(Aluno *A, int *n);
+void AumentaChave(int i, double ChaveNova, Aluno *A);
+void Insere(Aluno *x, Aluno *A, int *n);
+void Imprime(Aluno *V, int *n);
 
