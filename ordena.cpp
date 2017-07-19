@@ -7,6 +7,7 @@
 #include "HeapMin.h"
 #include "SelecaoSub.h"
 #include "QuickExterno.hpp"
+#include "contaDados.hpp"
 
 
 using namespace std;
@@ -32,6 +33,7 @@ void readProvao(FILE* fileProvao){
 int metodo = 0 , quantidade =0 , situacao =0 , op =0;
 clock_t c1, c2;
 double tempo = 0;
+long int escritas,leituras,comparacoes;
 
 int main(int argc, char* argv[]){
     
@@ -123,15 +125,15 @@ int main(int argc, char* argv[]){
         FILE* ArqLEs;
 
         if(situacao == 1){
-            ArqLi = fopen("PROVAO.bin","r+b");
-            ArqEi = fopen("PROVAO.bin","r+b");
-            ArqLEs = fopen("PROVAO.bin","r+b");
+            ArqLi = fopen("PROVAO_CRESCENTE.bin","r+b");
+            ArqEi = fopen("PROVAO_CRESCENTE.bin","r+b");
+            ArqLEs = fopen("PROVAO_CRESCENTE.bin","r+b");
             
         }
         else if (situacao == 2){
-            ArqLi = fopen("PROVAO.bin","r+b");
-            ArqEi = fopen("PROVAO.bin","r+b");
-            ArqLEs = fopen("PROVAO.bin","r+b");
+            ArqLi = fopen("PROVAO_DESCRESCENTE.bin","r+b");
+            ArqEi = fopen("PROVAO_DESCRESCENTE.bin","r+b");
+            ArqLEs = fopen("PROVAO_DESCRESCENTE.bin","r+b");
 
         }
         else if (situacao == 3){
@@ -148,19 +150,46 @@ int main(int argc, char* argv[]){
     
         Aluno A;
         c1 = clock();
+        fseek(ArqLi,0,SEEK_SET);
+
+        iniciaContadores();
 
         QuicksortExterno(&ArqLi, &ArqEi, &ArqLEs, 1 , quantidade);
 
         c2 = clock();
         tempo = (1.0*(c2 - c1)) / CLOCKS_PER_SEC;
+
+        comparacoes = returnComparacoes();
+        escritas = returnEscritas();
+        leituras = returnLeituras();
+
+
+        cout<<"TEMPO: "<<tempo<<endl;
+        cout<<"COMPARACOES: "<<comparacoes<<endl;
+        cout<<"ESCRITAS: "<<escritas<<endl;
+        cout<<"LEITURAS: "<<leituras<<endl;
+
+
         fflush(ArqLi);
         fclose(ArqEi);
         fclose(ArqLEs);
         fseek(ArqLi,0,SEEK_SET);
 
-        while (fread(&A,sizeof(Aluno),1,ArqLi)){
-            cout<<A.nota<<endl;
-         }
+        string white = " ";
+
+        if(op!=0)
+        {
+            while (fread(&A,sizeof(A),1,ArqLi))
+            {
+                 cout<<A.inscricao<<endl;
+                 cout<<A.nota<<white;
+                 cout<<A.estado<<white;
+                 cout<<A.cidade<<white;
+                 cout<<A.curso<<white;
+            }
+        }
+
+       
 
         fclose(ArqLi);
         
