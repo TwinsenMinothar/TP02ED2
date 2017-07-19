@@ -43,7 +43,7 @@ typedef struct Aluno {
 
 int iniciaFitas();
 
-int preencheMemoriaPrincipal();
+int preencheMemoriaPrincipal(FILE *arq);
 
 int ordenarMemoriaPrincipal();
 
@@ -65,6 +65,8 @@ int lePrimeiroElementoDeCadaLinha();
 
 int printNaFita(int fita, int inicio, int final);
 
+int redistribuirBlocos(int fitaOrigem);
+
 FILE **fitas = new FILE *[F - 1];
 
 typedef struct f {
@@ -79,7 +81,7 @@ int main() {
     int indice = 0;
     arq = fopen("PROVAO.TXT", "r");
     iniciaFitas();
-    while (preencheMemoriaPrincipal()) {
+    while (preencheMemoriaPrincipal(arq)) {
         ordenarMemoriaPrincipal();
         salvaNaFita(indice++);
         if (indice == 19)
@@ -89,6 +91,7 @@ int main() {
     fechaFitas();
     passaFitaSaida();
     fechaFitas();
+    redistribuirBlocos(19);
     return 0;
 }
 
@@ -107,7 +110,7 @@ int fechaFitas() {
     return 0;
 }
 
-int preencheMemoriaPrincipal() {
+int preencheMemoriaPrincipal(FILE *arq) {
     for (int i = 0; i < F - 1; i++) {
         if (feof(arq) && arq != NULL) {
             return 0;
@@ -221,9 +224,30 @@ int lePrimeiroElementoDeCadaLinha() {
 int printNaFita(int fita, int inicio, int final) {
     int i = inicio;
     for (; i < final; i++) {
-        fprintf(fitas[fita], "%s %s %s %.50s %.30s", memPrincipal[i].inscricao, memPrincipal[0].nota,
+        fprintf(fitas[fita], "%s %s %s %.50s %.30s", memPrincipal[i].inscricao, memPrincipal[i].nota,
                 memPrincipal[i].estado,
                 memPrincipal[i].cidade, memPrincipal[i].curso);
     }
     return memPrincipal[i].fita;
+}
+
+int redistribuirBlocos(int fitaOrigem) {
+    char nome[15];
+    sprintf(nome, "fita%d.txt", fitaOrigem + 1);
+    fitas[fitaOrigem] = fopen(nome, "r");
+    for (int i = 0; i < 19; i++) {
+        if (i == fitaOrigem)i++;
+        sprintf(nome, "fita%d.txt", i + 1);
+        fitas[i] = fopen(nome, "w");
+    }
+    int indice = 0;
+    while (preencheMemoriaPrincipal(fitas[fitaOrigem])) {
+        printNaFita(indice, 0, 19);
+        if (fitaChegouAoFimDaLinha(fitaOrigem)) {
+            fputc('\n', fitas[indice++]);
+            if (indice == fitaOrigem)indice++;
+            if (indice == 20)indice = 0;
+        }
+    }
+    return 0;
 }
