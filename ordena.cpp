@@ -34,20 +34,18 @@ clock_t c1, c2;
 double tempo = 0;
 
 int main(int argc, char* argv[]){
-
-
-
+    
     //inicializando as variaveis globais 
     if(argc == 4){
         metodo = atoi(argv [1]);
-        quantidade = atoi(argv [2]);
-        situacao = atoi(argv [3]);
+        quantidade = atoi(argv [3]);
+        situacao = atoi(argv [2]);
     }
 
     else if (argc == 5){
         metodo = atoi(argv [1]);
-        quantidade =atoi(argv[2]);
-        situacao = atoi(argv[3]);
+        quantidade =atoi(argv[3]);
+        situacao = atoi(argv[2]);
         op = atoi(argv [4]);
     }
 
@@ -125,21 +123,21 @@ int main(int argc, char* argv[]){
         FILE* ArqLEs;
 
         if(situacao == 1){
-            ArqLi = fopen("PROVAO_ORD.bin","r+b");
-            ArqEi = fopen("PROVAO_ORD.bin","r+b");
-            ArqLEs = fopen("PROVAO_ORD.bin","r+b");
+            ArqLi = fopen("PROVAO.bin","r+b");
+            ArqEi = fopen("PROVAO.bin","r+b");
+            ArqLEs = fopen("PROVAO.bin","r+b");
             
         }
         else if (situacao == 2){
-            ArqLi = fopen("PROVAO_ORD.bin","r+b");
-            ArqEi = fopen("PROVAO_ORD.bin","r+b");
-            ArqLEs = fopen("PROVAO_ORD.bin","r+b");
+            ArqLi = fopen("PROVAO.bin","r+b");
+            ArqEi = fopen("PROVAO.bin","r+b");
+            ArqLEs = fopen("PROVAO.bin","r+b");
 
         }
         else if (situacao == 3){
-            ArqLi = fopen("PROVAO_ORD.bin","r+b");
-            ArqEi = fopen("PROVAO_ORD.bin","r+b");
-            ArqLEs = fopen("PROVAO_ORD.bin","r+b");
+            ArqLi = fopen("PROVAO.bin","r+b");
+            ArqEi = fopen("PROVAO.bin","r+b");
+            ArqLEs = fopen("PROVAO.bin","r+b");
 
         }
 
@@ -148,23 +146,23 @@ int main(int argc, char* argv[]){
             return 0;
         }
     
-    Aluno A;
-    c1 = clock();
+        Aluno A;
+        c1 = clock();
 
-    QuicksortExterno(&ArqLi, &ArqEi, &ArqLEs, 1 , quantidade);
+        QuicksortExterno(&ArqLi, &ArqEi, &ArqLEs, 1 , quantidade);
 
-    c2 = clock();
-    tempo = (1.0*(c2 - c1)) / CLOCKS_PER_SEC;
-    fflush(ArqLi);
-    fclose(ArqEi);
-    fclose(ArqLEs);
-    fseek(ArqLi,0,SEEK_SET);
+        c2 = clock();
+        tempo = (1.0*(c2 - c1)) / CLOCKS_PER_SEC;
+        fflush(ArqLi);
+        fclose(ArqEi);
+        fclose(ArqLEs);
+        fseek(ArqLi,0,SEEK_SET);
 
-    while (fread(&A,sizeof(Aluno),1,ArqLi)){
-        cout<<A.nota<<endl;
-    }
+        while (fread(&A,sizeof(Aluno),1,ArqLi)){
+            cout<<A.nota<<endl;
+         }
 
-    fclose(ArqLi);
+        fclose(ArqLi);
         
     }
 
