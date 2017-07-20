@@ -8,6 +8,7 @@
 #include "SelecaoSub.h"
 #include "QuickExterno.hpp"
 #include "contaDados.hpp"
+#include "Intercalacao Balanceada.h"
 
 
 using namespace std;
@@ -109,7 +110,7 @@ int main(int argc, char* argv[]){
             cout<<"open arq 2"<<endl;
         }
         else if(situacao ==3){
-            cout<<"open arq 3"<<endl;
+            iniciaf();
         }
         else{
             cout<<"Arquivo nao encontrado"<<endl;

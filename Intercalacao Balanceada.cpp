@@ -1,12 +1,8 @@
 //
 // Created by camillo on 06/07/17.
 // Teste Update
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <cstring>
-#include <algorithm>
-#include <chrono>
+
+#include "Intercalacao Balanceada.h"
 
 #define TAMAREA 100
 #define F 20
@@ -40,35 +36,6 @@ typedef struct Aluno {
     char curso[30];
     int fita;
 } Aluno;
-// Memoria para 19 registros
-
-int iniciaFitas();
-
-int preencheMemoriaPrincipal(FILE *arq);
-
-int ordenarMemoriaPrincipal(int fitasAbertas);
-
-void imprimeMemoriaPrincipal();
-
-int salvaNaFita(int indice);
-
-int passaFitaSaida();
-
-int fechaFitas();
-
-bool fitaChegouAoFimDaLinha(int fitaUsada);
-
-int fitaAindaTemLinha();
-
-bool fitasEOF();
-
-int lePrimeiroElementoDeCadaLinha();
-
-int printNaFita(int fita, int inicio, int final);
-
-int redistribuirBlocos(int fitaOrigem);
-
-int fitasAbertas();
 
 FILE **fitas = new FILE *[F - 1];
 
@@ -81,7 +48,7 @@ FILE *arq;
 Aluno *memPrincipal = new Aluno[19];
 int comparacoes, escritas, leituras;
 
-int main() {
+int iniciaf1(){
     auto started = std::chrono::high_resolution_clock::now();
     int indice = 0;
     comparacoes = 0;
