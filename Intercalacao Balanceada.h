@@ -40,7 +40,11 @@ int redistribuirBlocos(int fitaOrigem);
 
 int fitasAbertas();
 
-int iniciaf();
+int iniciaf1(int quantidade,char flag[]);
+
+void resetaMemoriaPrincipal();
+
+void imprimeArquivo(int indice);
 
 
 #endif //IBVCF1_INTERCALACAO_BALANCEADA_H

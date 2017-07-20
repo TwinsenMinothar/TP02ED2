@@ -1,6 +1,6 @@
 //
 // Created by camillo on 06/07/17.
-// Teste Update
+// Last Version
 
 #include "Intercalacao Balanceada.h"
 
@@ -46,14 +46,15 @@ typedef struct f {
 
 FILE *arq;
 Aluno *memPrincipal = new Aluno[19];
-int comparacoes, escritas, leituras;
+unsigned int comparacoesf, escritasf, leiturasf;
 
-int iniciaf1(){
+int iniciaf1(int quantidade, char flag[]) {
     auto started = std::chrono::high_resolution_clock::now();
     int indice = 0;
-    comparacoes = 0;
-    escritas = 0;
-    leituras = 0;
+    comparacoesf = 0;
+    escritasf = 0;
+    leiturasf = 0;
+    int qt = 0;
     arq = fopen("PROVAO.TXT", "r");
     iniciaFitas();
     while (preencheMemoriaPrincipal(arq)) {
@@ -61,6 +62,11 @@ int iniciaf1(){
         salvaNaFita(indice++);
         if (indice == 19)
             indice = 0;
+        if (quantidade != -1) {
+            qt += 19;
+            if (qt >= quantidade)
+                break;
+        }
     }
     fclose(arq);
     fechaFitas();
@@ -79,8 +85,10 @@ int iniciaf1(){
     passaFitaSaida();
     fechaFitas();
     auto done = std::chrono::high_resolution_clock::now();
-    float tempo = std::chrono::duration_cast<std::chrono::seconds>(done - started).count();
-    cout << "Comparacoes: " << comparacoes << " Escritas: " << escritas << " Leituras: " << leituras << " Tempo: "
+    float tempo = std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count();
+    if (strcmp(flag, "-P") == 0)
+        imprimeArquivo(19);
+    cout << "Comparacoes: " << comparacoesf << " Escritas: " << escritasf << " Leituras: " << leiturasf << " Tempo: "
          << tempo << endl;
     return 0;
 }
@@ -105,7 +113,7 @@ int preencheMemoriaPrincipal(FILE *arq) {
         if (feof(arq) && arq != NULL) {
             return 0;
         }
-        leituras++;
+        leiturasf++;
         fscanf(arq, "%s %s %s %51c %30c", memPrincipal[i].inscricao, memPrincipal[i].nota, memPrincipal[i].estado,
                memPrincipal[i].cidade, memPrincipal[i].curso);
         memPrincipal[i].notaf = atof(memPrincipal[i].nota);
@@ -114,7 +122,7 @@ int preencheMemoriaPrincipal(FILE *arq) {
 }
 
 bool compare(Aluno const &a, Aluno const &b) {
-    comparacoes++;
+    comparacoesf++;
     return a.notaf > b.notaf;
 }
 
@@ -126,13 +134,14 @@ int ordenarMemoriaPrincipal(int fitasAbertas) {
 
 void imprimeMemoriaPrincipal() {
     for (int i = 0; i < F - 1; i++) {
-        cout << memPrincipal[i].notaf << " ";
+        cout << memPrincipal[i].inscricao << memPrincipal[i].nota << memPrincipal[i].estado << memPrincipal[i].cidade
+             << memPrincipal[i].curso << endl;
     }
 }
 
 int salvaNaFita(int indice) {
     for (int i = 0; i < F - 1; i++) {
-        escritas++;
+        escritasf++;
         fprintf(fitas[indice], "%s %s %s %.50s %.30s", memPrincipal[i].inscricao, memPrincipal[i].nota,
                 memPrincipal[i].estado,
                 memPrincipal[i].cidade, memPrincipal[i].curso);
@@ -150,6 +159,7 @@ int passaFitaSaida() {
         sprintf(nome, "fita%d.txt", i + 1);
         fitas[i] = fopen(nome, "r");
     }
+    resetaMemoriaPrincipal();
     int fitasAbertasi = fitasAbertas();
     lePrimeiroElementoDeCadaLinha();
     fitas[19] = fopen("fita20.txt", "w");
@@ -172,7 +182,7 @@ int passaFitaSaida() {
                memPrincipal[0].cidade, memPrincipal[0].curso);
         memPrincipal[0].notaf = atof(memPrincipal[0].nota);
         memPrincipal[0].fita = fitaUsada;
-        leituras++;
+        leiturasf++;
     }
     ordenarMemoriaPrincipal(fitasAbertasi);
     printNaFita(19, 0, fitasAbertasi);
@@ -210,7 +220,7 @@ int lePrimeiroElementoDeCadaLinha() {
                memPrincipal[i].cidade, memPrincipal[i].curso);
         memPrincipal[i].notaf = atof(memPrincipal[i].nota);
         memPrincipal[i].fita = i;
-        leituras++;
+        leiturasf++;
     }
 }
 
@@ -220,9 +230,9 @@ int printNaFita(int fita, int inicio, int final) {
         fprintf(fitas[fita], "%s %s %s %.50s %.30s", memPrincipal[i].inscricao, memPrincipal[i].nota,
                 memPrincipal[i].estado,
                 memPrincipal[i].cidade, memPrincipal[i].curso);
-        escritas++;
+        escritasf++;
     }
-    return memPrincipal[i].fita;
+    return memPrincipal[i - 1].fita;
 }
 
 int redistribuirBlocos(int fitaOrigem) {
@@ -238,7 +248,7 @@ int redistribuirBlocos(int fitaOrigem) {
     while (preencheMemoriaPrincipal(fitas[fitaOrigem])) {
         printNaFita(indice, 0, 19);
         if (fitaChegouAoFimDaLinha(fitaOrigem)) {
-            printNaFita(indice, 0, 19);
+            //printNaFita(indice, 0, 19);
             fputc('\n', fitas[indice++]);
             if (indice == fitaOrigem)indice++;
             if (indice == 20)indice = 0;
@@ -258,4 +268,27 @@ int fitasAbertas() {
         fseek(fitas[i], curPos, SEEK_SET);
     }
     return F - 1 - fitasFechadas;
+}
+
+void resetaMemoriaPrincipal() {
+    for (int i = 0; i < F - 1; i++) {
+        memPrincipal[i].notaf = -1;
+    }
+}
+
+void imprimeArquivo(int indice) {
+    char nome[15];
+    sprintf(nome, "fita%d.txt", indice + 1);
+    int i = 0;
+    int qt = 1;
+    char *file_contents;
+    long input_file_size;
+    FILE *input_file = fopen(nome, "rb");
+    fseek(input_file, 0, SEEK_END);
+    input_file_size = ftell(input_file);
+    rewind(input_file);
+    file_contents = (char*)malloc(input_file_size * (sizeof(char)));
+    fread(file_contents, sizeof(char), input_file_size, input_file);
+    fclose(input_file);
+    cout << file_contents;
 }
