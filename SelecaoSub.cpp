@@ -7,22 +7,22 @@
 #include "SelecaoSub.h"
 
 using namespace std;
-#define TAM 10
-#define NUM_BLOCK 20
+#define TAM 10 // Tamanho do meu heap
+#define NUM_BLOCK 20 // numero de blocos ordenados que serao gerados
 
-TipoIndice N = TAM;
+int N = TAM;
 
-void convertTxtParaBIN(FILE* fileEntrada , FILE* BIN){
-    TipoItem Item;
+void convertTxtParaBIN(FILE* fileEntrada , FILE* BIN){// funcao que converte um arquivo TXT para binario
+    Aluno Item;
     char enter ; 
     rewind(fileEntrada);
-    while (fscanf(fileEntrada,"%ld %f %2s %50[^\n] %30[^\n] %[\n]",&Item.Inscricao,&Item.Chave,Item.Estado,Item.Cidade,Item.Curso,enter)!=EOF){
+    while (fscanf(fileEntrada,"%ld %f %2s %50[^\n] %30[^\n] %[\n]",&Item.inscricao,&Item.nota,Item.estado,Item.cidade,Item.curso,enter)!=EOF){
         fwrite(&Item,sizeof(Item),1,BIN);
     }
     fclose(fileEntrada);
 
 } 
-void preencheVetor(TipoItem* vetor,FILE* fileEntrada){
+void preencheVetor(Aluno* vetor,FILE* fileEntrada){// inicializa meu heap , preenchendo com os dados do arquivo
     int i=1;
     for(i;i<=TAM;i++){
         fread(&vetor[i],sizeof(*vetor),1,fileEntrada);
@@ -32,15 +32,15 @@ void preencheVetor(TipoItem* vetor,FILE* fileEntrada){
     Imprime(vetor,&N);
 }
 
-void convertToChar(int num,char* buff){
+void convertToChar(int num,char* buff){// funcao que converte um numero inteiro para char 
     snprintf(buff, sizeof(buff), "%d", num);
     
 }
 
-void esvaziarVetor(TipoItem* vetor,TipoIndice* n){
+void esvaziarVetor(Aluno* vetor,int* n){//esvazia meu heap
     
     char block[50],bin[5],num[33];
-    TipoItem Minimo;
+    Aluno Minimo;
     
     strcpy(block,"Bloco");
     strcpy(bin,".bin");
@@ -52,7 +52,7 @@ void esvaziarVetor(TipoItem* vetor,TipoIndice* n){
         
         Minimo = RetiraMin(vetor,n);
         Imprime(vetor,n);
-        convertToChar(Minimo.Indice,num);
+        convertToChar(Minimo.nota,num);
         strcat(block,num);
         strcat(block,bin);
         fileSaida = fopen(block, "ab");
@@ -64,11 +64,11 @@ void esvaziarVetor(TipoItem* vetor,TipoIndice* n){
 
 }
 
-void sub(TipoItem* vetor,int numeroArq,TipoIndice* n ){
-    int indice = 1;
-    TipoItem Minimo;
-    TipoItem Item;
-    Item.Indice = indice;
+void sub(Aluno* vetor,int numeroArq,int* n ){ // executa a selecao por substituicao 
+    int fita = 1;
+    Aluno Minimo;
+    Aluno Item;
+    Item.fita = fita;
 
     char block[50];
     char txt[5];
@@ -87,27 +87,27 @@ void sub(TipoItem* vetor,int numeroArq,TipoIndice* n ){
 
     while (fread(&Item,sizeof(Item),1,fileEntrada)==1){
         
-         if(Item.Chave < Minimo.Chave){
-            if(indice == NUM_BLOCK){
-                indice = 1;
+         if(Item.nota < Minimo.nota){
+            if(fita == NUM_BLOCK){
+                fita = 1;
             }
-            Item.Indice = indice + 1;
+            Item.fita = fita + 1;
             Insere(&Item,vetor,n);
           
          }
 
-         if(Item.Chave >= Minimo.Chave){
-            Item.Indice = indice;
+         if(Item.nota >= Minimo.nota){
+            Item.fita = fita;
             Insere(&Item,vetor,n);
             
          }
         
-         if(Min(vetor).Indice > indice){
-             indice++;
+         if(Min(vetor).fita > fita){
+             fita++;
          }
          
          Minimo = RetiraMin(vetor,n);
-         convertToChar(Minimo.Indice,num);
+         convertToChar(Minimo.fita,num);
     
          strcat(block,num);
          strcat(block,txt);
@@ -120,7 +120,7 @@ void sub(TipoItem* vetor,int numeroArq,TipoIndice* n ){
     esvaziarVetor(vetor,&N);
     fclose(fileEntrada);
 }
-void selecaoPorSub(){
-    TipoVetor vetor;
+void selecaoPorSub(){// delega as funcoes 
+    Aluno vetor[TAM+1];
     sub(vetor,NUM_BLOCK,&N );
 }

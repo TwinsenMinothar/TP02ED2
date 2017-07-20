@@ -1,7 +1,7 @@
 #ifndef ALUNOS_HPP_
 #define ALUNOS_HPP_
 
-#define TAMAREA 10
+#define TAMAREA 50
 
 typedef struct{
     long inscricao;

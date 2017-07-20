@@ -4,9 +4,9 @@
 
 
 
-void preencheVetor(TipoItem* vetor,FILE* fileEntrada);
-void esvaziarVetor(TipoItem* vetor,TipoIndice* n);
+void preencheVetor(Aluno* vetor,FILE* fileEntrada);
+void esvaziarVetor(Aluno* vetor,Aluno* n);
 void convertTxtParaBIN(FILE* fileEntrada , FILE* BIN);
 void convertToChar(int num);
-void sub(TipoItem* vetor,int numeroArq,TipoIndice* n );
+void sub(Aluno* vetor,int numeroArq,int* n );
 void selecaoPorSub();
