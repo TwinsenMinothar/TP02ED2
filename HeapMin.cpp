@@ -5,11 +5,11 @@
 
 #include "HeapMin.h"
 
-void swap(TipoItem* A , TipoIndice n){
+void swap(Aluno* A , int n){
   int i=1;
-  TipoItem temp;
+  Aluno temp;
   for (i ; i<n-1 ; i=(i*2)-1){
-    if(A[i].Chave > A[i+1].Chave && A[i].Indice == A[i+1].Indice){
+    if(A[i].nota > A[i+1].nota && A[i].fita == A[i+1].fita){
       temp = A[i+1];
       A[i+1]=A[i];
       A[i]=temp;
@@ -18,51 +18,51 @@ void swap(TipoItem* A , TipoIndice n){
   }
 }
 
-void Refaz(TipoIndice Esq, TipoIndice Dir, TipoItem *A)
+void Refaz(int Esq, int Dir, Aluno *A)
 { 
-  TipoIndice i = Esq;
+  int i = Esq;
   int j;
-  TipoItem x;
+  Aluno x;
   j = (i * 2);
   x = A[i];
   while (j <= Dir) 
     { 
       if (j < Dir)
       { 
-        if (A[j].Chave > A[j+1].Chave)
+        if (A[j].nota > A[j+1].nota)
         j++;
       }
-      if (x.Chave <= A[j].Chave){ goto L999;}
+      if (x.nota <= A[j].nota){ goto L999;}
       A[i] = A[j];
       i = j; j = i * 2;
     }
   L999: A[i] = x;
 
 } 
-void RefazPeloIndice(TipoIndice Esq, TipoIndice Dir, TipoItem *A)
+void RefazPeloIndice(int Esq, int Dir, Aluno *A)
 { 
-  TipoIndice i = Esq;
+  int i = Esq;
   int j;
-  TipoItem x;
+  Aluno x;
   j = i * 2;
   x = A[i];
   while (j <= Dir) 
     { 
       if (j < Dir)
       { 
-        if (A[j].Indice > A[j+1].Indice)
+        if (A[j].fita > A[j+1].fita)
           j++;
       }
-      if (x.Indice <= A[j].Indice){ goto L999;}
+      if (x.fita <= A[j].fita){ goto L999;}
       A[i] = A[j];
       i = j; j = i * 2;
     }
   L999: A[i] = x;
 } 
 
-void Constroi(TipoItem *A, TipoIndice *n)
+void Constroi(Aluno *A, int *n)
 { 
-  TipoIndice Esq;
+  int Esq;
   Esq = *n / 2 + 1;
   while (Esq > 1) 
     {
@@ -71,9 +71,9 @@ void Constroi(TipoItem *A, TipoIndice *n)
     }
 } 
 
-void ConstroiPeloIndice(TipoItem *A, TipoIndice *n)
+void ConstroiPeloIndice(Aluno *A, int *n)
 { 
-  TipoIndice Esq;
+  int Esq;
   Esq = *n /2 + 1 ;
 
   while (Esq > 1) 
@@ -82,14 +82,14 @@ void ConstroiPeloIndice(TipoItem *A, TipoIndice *n)
     }
 } 
 
-TipoItem Min(TipoItem *A)
+Aluno Min(Aluno *A)
 { 
   return (A[1]); 
 }
 
-TipoItem RetiraMin(TipoItem *A, TipoIndice *n)
+Aluno RetiraMin(Aluno *A, int *n)
 { 
-  TipoItem Minimo;
+  Aluno Minimo;
   if (*n < 1) 
   printf("Erro: heap vazio\n");
   else { Minimo = A[1];  A[1] = A[*n];  (*n)--;
@@ -101,15 +101,15 @@ TipoItem RetiraMin(TipoItem *A, TipoIndice *n)
   return Minimo;
 }
 
-void AumentaChave(TipoIndice i, TipoChave ChaveNova, TipoItem *A)
+void AumentaChave(int i, double ChaveNova, Aluno *A)
 { 
-  TipoItem x;
-  if (ChaveNova < A[i].Chave) 
+  Aluno x;
+  if (ChaveNova < A[i].nota) 
   { printf("Erro: ChaveNova menor que a chave atual\n");
     return;
   }
-  A[i].Chave = ChaveNova;
-  while (i > 1 && A[i / 2].Chave > A[i].Chave) 
+  A[i].nota = ChaveNova;
+  while (i > 1 && A[i / 2].nota > A[i].nota) 
     { 
       x = A[i / 2]; 
       A[i / 2] = A[i];  
@@ -118,20 +118,20 @@ void AumentaChave(TipoIndice i, TipoChave ChaveNova, TipoItem *A)
     }
 }
 
-void Insere(TipoItem *x, TipoItem *A, TipoIndice *n)
+void Insere(Aluno *x, Aluno *A, int *n)
 {
   (*n)++;
-  A[*n] = *x;  A[*n].Chave = INT_MIN;
-  AumentaChave(*n, x->Chave, A);
+  A[*n] = *x;  A[*n].nota = INT_MIN;
+  AumentaChave(*n, x->nota, A);
   Constroi(A,n);
   ConstroiPeloIndice(A,n);
 }
 
-void Imprime(TipoItem *V, TipoIndice *n)
+void Imprime(Aluno *V, int *n)
 { 
   int i;
   for (i = 1; i <= *n; i++){
-    printf("%f ", V[i].Chave);
+    printf("%f ", V[i].nota);
   }
   putchar('\n');
 }
