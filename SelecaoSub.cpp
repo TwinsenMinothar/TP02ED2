@@ -5,6 +5,7 @@
 #include<string.h>
 #include "HeapMin.h"
 #include "SelecaoSub.h"
+#include "Aluno.h" 
 
 using namespace std;
 #define TAM 10 // Tamanho do meu heap
