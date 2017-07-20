@@ -9,6 +9,7 @@
 #include "QuickExterno.hpp"
 #include "contaDados.hpp"
 #include "Intercalacao Balanceada.h"
+#include "VariosCaminhos.h"
 
 
 using namespace std;
